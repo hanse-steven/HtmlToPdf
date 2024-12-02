@@ -11,13 +11,13 @@
             font-family: 'Helvetica', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #fff; /* Fond blanc pour économiser de l'encre */
+            background-color: #fff;
             color: #333;
             font-size: 12px;
         }
 
         h1 {
-            color: #004080; /* Bleu d'origine */
+            color: #004080;
             border-bottom: 1px solid #004080;
             padding-bottom: 5px;
             margin-bottom: 10px;
@@ -27,7 +27,7 @@
         h2 {
             font-size: 1em;
             margin: 5px 0;
-            color: #004080; /* Bleu d'origine */
+            color: #004080;
         }
 
         table {
@@ -35,8 +35,8 @@
             border-collapse: collapse;
             margin: 10px 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 8px; /* Arrondir les angles */
-            overflow: hidden; /* Pour que les bordures arrondies fonctionnent */
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
@@ -46,7 +46,7 @@
         }
 
         th {
-            background-color: #004080; /* Bleu d'origine */
+            background-color: #004080;
             color: #fff;
             font-weight: bold;
             font-size: 0.9em;
@@ -60,10 +60,24 @@
             background-color: #f1f1f1;
         }
 
+        tfoot {
+            background-color: #004080;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tfoot td {
+            text-align: right;
+        }
+
+        .montant {
+            text-align: right;
+        }
+
         body > div:not(:last-child) {
             page-break-after: always;
         }
-        
+
         body > div > div {
             padding-top: .5rem;
             padding-bottom: 1rem;
@@ -75,35 +89,41 @@
 
 @foreach (Category category in Model.mesdepenses)
 {
-    <div>
-        <h1>@category.CategoryName</h1>
+<div>
+    <h1>@category.CategoryName</h1>
 
-        @foreach (Libele libele in category.Libeles)
-        {
-            <div>
-                <h2>@libele.LibeleName</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Motif</th>
-                        <th>Date</th>
-                        <th>Montant</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (InOut inOut in libele.InOuts)
-                        {
-                            <tr>
-                                <td>@inOut.Motif</td>
-                                <td>@inOut.Date</td>
-                                <td>@inOut.Montant</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
+    @foreach (Libele libele in category.Libeles)
+    {
+    <div>
+        <h2>@libele.LibeleName</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Motif</th>
+                <th>Date</th>
+                <th>Montant</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (InOut inOut in libele.InOuts)
+            {
+            <tr>
+                <td>@inOut.Motif</td>
+                <td>@inOut.Date.ToString("dd-MM-yyyy")</td>
+                <td class="montant">@inOut.Montant.ToString("C")</td>
+            </tr>
+            }
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2">Total</td>
+                <td class="montant">@libele.InOuts.Sum(x => x.Montant).ToString("C")</td>
+            </tr>
+            </tfoot>
+        </table>
     </div>
+    }
+</div>
 }
 
 </body>
